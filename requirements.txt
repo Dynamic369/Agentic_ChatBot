@@ -1,2 +1,8 @@
-numpy
-pandas
+langchain
+langchain_groq
+langgraph
+langchain_community
+langchain_core
+faiss-cpu
+streamlit
+tavily-python
