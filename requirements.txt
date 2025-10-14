@@ -6,3 +6,4 @@ faiss-cpu
 streamlit
 tavily-python
 langgraph
+langchain-tavily
