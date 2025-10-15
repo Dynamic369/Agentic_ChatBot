@@ -9,7 +9,7 @@ class Config:
     def get_llm_options(self):
         return self.config['DEFAULT'].get("LLM_OPTIONS").split(", ")
     
-    def get_usercase_options(self):
+    def get_usecase_options(self):
         return self.config['DEFAULT'].get("USECASE_OPTIONS").split(", ")
     
     def get_groq_model_options(self):
