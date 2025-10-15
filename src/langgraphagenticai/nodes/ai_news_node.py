@@ -23,7 +23,19 @@ class AINewsNode:
             dict: Updated state with 'news_data' key containing fetched news.
         """
 
-        frequency = state['messages'][0].content.lower()
+        # Fix: Check for empty messages list
+        if 'messages' not in state or not state['messages']:
+            raise ValueError("No messages found in state. Please provide a frequency in the messages list.")
+        # Support both string and object with .content
+        msg = state['messages'][0]
+        if hasattr(msg, 'content'):
+            frequency = msg.content.lower()
+        elif isinstance(msg, dict) and 'content' in msg:
+            frequency = msg['content'].lower()
+        elif isinstance(msg, str):
+            frequency = msg.lower()
+        else:
+            raise ValueError("Message format not recognized. Must be string or dict with 'content'.")
         self.state['frequency'] = frequency
         time_range_map = {'daily': 'd', 'weekly': 'w', 'monthly': 'm', 'year': 'y'}
         days_map = {'daily': 1, 'weekly': 7, 'monthly': 30, 'year': 366}
@@ -31,11 +43,10 @@ class AINewsNode:
         response = self.tavily.search(
             query="Top Artificial Intelligence (AI) technology news India and globally",
             topic="news",
-            time_range=time_range_map[frequency],
+            time_range=time_range_map.get(frequency, 'd'),
             include_answer="advanced",
             max_results=20,
-            days=days_map[frequency],
-            # include_domains=["techcrunch.com", "venturebeat.com/ai", ...]  # Uncomment and add domains if needed
+            days=days_map.get(frequency, 1),
         )
 
         state['news_data'] = response.get('results', [])
